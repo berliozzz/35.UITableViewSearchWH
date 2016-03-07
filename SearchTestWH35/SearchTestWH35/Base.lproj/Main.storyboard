@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="bvH-oL-moX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="bvH-oL-moX">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
     </dependencies>
     <scenes>
-        <!--Root View Controller-->
+        <!--Search test-->
         <scene sceneID="ALY-3F-qPu">
             <objects>
                 <tableViewController id="f8D-xA-rb5" customClass="ViewController" sceneMemberID="viewController">
@@ -13,17 +13,42 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <searchBar key="tableHeaderView" contentMode="redraw" placeholder="Search people" showsCancelButton="YES" id="GWT-8z-QSd">
-                            <rect key="frame" x="0.0" y="64" width="320" height="44"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                            <textInputTraits key="textInputTraits"/>
-                            <connections>
-                                <outlet property="delegate" destination="f8D-xA-rb5" id="0aX-rk-Php"/>
-                            </connections>
-                        </searchBar>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="Zc5-Ah-0pn">
+                            <rect key="frame" x="0.0" y="64" width="320" height="72"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="fZi-tX-Zo2">
+                                    <rect key="frame" x="0.0" y="0.0" width="295" height="29"/>
+                                    <segments>
+                                        <segment title="Date"/>
+                                        <segment title="First Name"/>
+                                        <segment title="Last Name"/>
+                                    </segments>
+                                    <connections>
+                                        <action selector="actionChangeSortType:" destination="f8D-xA-rb5" eventType="valueChanged" id="cWh-Bt-pQ8"/>
+                                    </connections>
+                                </segmentedControl>
+                                <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="ARQ-FI-FRR">
+                                    <rect key="frame" x="0.0" y="28" width="295" height="44"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="f8D-xA-rb5" id="jKC-XA-bq6"/>
+                                    </connections>
+                                </searchBar>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="fZi-tX-Zo2" firstAttribute="leading" secondItem="Zc5-Ah-0pn" secondAttribute="leading" id="X85-8c-Nmr"/>
+                                <constraint firstItem="fZi-tX-Zo2" firstAttribute="trailing" secondItem="ARQ-FI-FRR" secondAttribute="trailing" id="YA7-ZE-SDP"/>
+                                <constraint firstItem="fZi-tX-Zo2" firstAttribute="top" secondItem="Zc5-Ah-0pn" secondAttribute="top" id="gqO-k6-idU"/>
+                                <constraint firstAttribute="bottom" secondItem="ARQ-FI-FRR" secondAttribute="bottom" id="kDb-EF-XyS"/>
+                                <constraint firstAttribute="trailing" secondItem="fZi-tX-Zo2" secondAttribute="trailing" constant="25" id="klv-vB-cQD"/>
+                                <constraint firstItem="fZi-tX-Zo2" firstAttribute="leading" secondItem="ARQ-FI-FRR" secondAttribute="leading" id="rLm-LJ-z5e"/>
+                            </constraints>
+                        </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="oMX-Iq-w0Z">
-                                <rect key="frame" x="0.0" y="136" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="164" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oMX-Iq-w0Z" id="1qj-2w-p65">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -36,58 +61,15 @@
                             <outlet property="delegate" destination="f8D-xA-rb5" id="Y92-mO-jAG"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Root View Controller" id="pzG-LW-Iy9"/>
+                    <navigationItem key="navigationItem" title="Search test" id="pzG-LW-Iy9"/>
                     <connections>
-                        <outlet property="searchBar" destination="GWT-8z-QSd" id="Z8b-yn-kTl"/>
+                        <outlet property="changeSortTypeControl" destination="fZi-tX-Zo2" id="gb8-NH-OrH"/>
+                        <outlet property="searchBar" destination="ARQ-FI-FRR" id="KiC-Ug-P8R"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NFF-LT-HQD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="569" y="182"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="5R8-zE-kbb">
-            <objects>
-                <viewController id="kwS-C9-Hv5" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="m5M-L2-4n9">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <searchBar contentMode="redraw" id="fVo-7d-DdX">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </searchBar>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="BWc-Xd-4AY">
-                                <rect key="frame" x="0.0" y="44" width="320" height="29"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <segments>
-                                    <segment title="First"/>
-                                    <segment title="Second"/>
-                                </segments>
-                            </segmentedControl>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="fnw-N5-0Yc">
-                                <rect key="frame" x="0.0" y="74" width="320" height="494"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="uGZ-yN-7jl">
-                                        <rect key="frame" x="0.0" y="28" width="320" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="uGZ-yN-7jl" id="uC6-Wr-gZe">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </prototypes>
-                            </tableView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="BUv-lR-2ss" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="979" y="177"/>
+            <point key="canvasLocation" x="491" y="182"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="INK-oq-mBJ">
@@ -98,7 +80,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="f8D-xA-rb5" kind="relationship" relationship="rootViewController" id="1Sp-ut-nvH"/>
+                        <segue destination="f8D-xA-rb5" kind="relationship" relationship="rootViewController" id="wfY-C9-Fla"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YY4-o2-Bw3" userLabel="First Responder" sceneMemberID="firstResponder"/>

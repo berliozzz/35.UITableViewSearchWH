@@ -17,6 +17,14 @@
 
 @end
 
+typedef enum
+{
+    SortTableTypeDate,
+    SortTableTypeName,
+    SortTableTypeLastName
+    
+}SortTableType;
+
 @implementation ViewController
 
 - (void)viewDidLoad {
@@ -30,14 +38,12 @@
         [self.studentsArray addObject:[Student randomStudent]];
     }
     
-    self.studentsArray = [self sortArrayToMonthWithArray:self.studentsArray];
-    
-    self.sectionsArray = [self createDataForTableWith:self.studentsArray withFilter:self.searchBar.text];
+    self.sectionsArray = [self createDataForTableToMonthWith:self.studentsArray withFilter:self.searchBar.text];
 }
 
 #pragma mark - Private Methods
 
-- (NSMutableArray*) createDataForTableWith:(NSMutableArray*)array withFilter:(NSString*)filterString
+- (NSMutableArray*) createDataForTableToMonthWith:(NSMutableArray*)array withFilter:(NSString*)filterString
 {
     NSMutableArray *sectionsArray = [NSMutableArray array];
     
@@ -48,9 +54,11 @@
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"MMM"];
     
+    array = [self sortArrayToMonthWithArray:array];
+    
     for (Student *student in array)
     {
-        if ([filterString length] > 0 && [student.firstName rangeOfString:filterString].location == NSNotFound)
+        if ([filterString length] > 0 && [student.firstName rangeOfString:filterString].location == NSNotFound && [student.lastName rangeOfString:filterString].location == NSNotFound)
         {
             continue;
         }
@@ -74,12 +82,110 @@
         [section.itemsArray addObject:student];
     }
     
-    sectionsArray = [self sortItemsArray:sectionsArray];
+    sectionsArray = [self sortItemsArrayToName:sectionsArray];
     
     return sectionsArray;
 }
 
-- (NSMutableArray*) sortItemsArray:(NSMutableArray*)array
+- (NSMutableArray*) createDataForTableToNamehWith:(NSMutableArray*)array withFilter:(NSString*)filterString
+{
+    NSMutableArray* sectionsArray = [NSMutableArray array];
+    
+    NSString* currentLetter = nil;
+    
+    array = [self sortArrayToNamehWithArray:array];
+    
+    for (Student* student in array) {
+        
+        if ([filterString length] > 0 && [student.firstName rangeOfString:filterString].location == NSNotFound && [student.lastName rangeOfString:filterString].location == NSNotFound)
+        {
+            continue;
+        }
+        
+        NSString* firstLetter = [student.firstName substringToIndex:1];
+        
+        Sections* section = nil;
+        
+        if (![currentLetter isEqualToString:firstLetter]) {
+            section = [[Sections alloc] init];
+            section.sectionsName = firstLetter;
+            section.itemsArray = [NSMutableArray array];
+            currentLetter = firstLetter;
+            [sectionsArray addObject:section];
+        } else {
+            section = [sectionsArray lastObject];
+        }
+        
+        [section.itemsArray addObject:student];
+    }
+    
+    sectionsArray = [self sortItemsArrayToName:sectionsArray];
+    
+    return sectionsArray;
+}
+
+- (NSMutableArray*) createDataForTableToLastNamehWith:(NSMutableArray*)array withFilter:(NSString*)filterString
+{
+    NSMutableArray* sectionsArray = [NSMutableArray array];
+    
+    NSString* currentLetter = nil;
+    
+    array = [self sortArrayToLastNamehWithArray:array];
+    
+    for (Student* student in array) {
+        
+        if ([filterString length] > 0 && [student.firstName rangeOfString:filterString].location == NSNotFound && [student.lastName rangeOfString:filterString].location == NSNotFound)
+        {
+            continue;
+        }
+        
+        NSString* firstLetter = [student.lastName substringToIndex:1];
+        
+        Sections* section = nil;
+        
+        if (![currentLetter isEqualToString:firstLetter]) {
+            section = [[Sections alloc] init];
+            section.sectionsName = firstLetter;
+            section.itemsArray = [NSMutableArray array];
+            currentLetter = firstLetter;
+            [sectionsArray addObject:section];
+        } else {
+            section = [sectionsArray lastObject];
+        }
+        
+        [section.itemsArray addObject:student];
+    }
+    
+    sectionsArray = [self sortItemsArrayToLastName:sectionsArray];
+    
+    return sectionsArray;
+}
+
+#pragma mark - Sort Methods
+
+- (NSMutableArray*) sortArrayToLastNamehWithArray:(NSMutableArray*)array
+{
+    [array sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        return [[obj1 lastName] compare:[obj2 lastName]];
+    }];
+    
+    return array;
+}
+
+- (NSMutableArray*) sortArrayToNamehWithArray:(NSMutableArray*)array
+{
+    [array sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        return [[obj1 lastName] compare:[obj2 lastName]];
+    }];
+    
+    [array sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        return [[obj1 firstName] compare:[obj2 firstName]];
+    }];
+    
+    return array;
+}
+
+- (NSMutableArray*) sortItemsArrayToName:(NSMutableArray*)array
 {
     for (Sections *section in array)
     {
@@ -89,6 +195,22 @@
         
         [section.itemsArray sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
             return [[obj1 firstName] compare:[obj2 firstName]];
+        }];
+    }
+    
+    return array;
+}
+
+- (NSMutableArray*) sortItemsArrayToLastName:(NSMutableArray*)array
+{
+    for (Sections *section in array)
+    {
+        [section.itemsArray sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+            return [[obj1 firstName] compare:[obj2 firstName]];
+        }];
+        
+        [section.itemsArray sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+            return [[obj1 lastName] compare:[obj2 lastName]];
         }];
     }
     
@@ -191,10 +313,43 @@
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
-    self.sectionsArray = [self createDataForTableWith:self.studentsArray withFilter:searchText];
-    [self.tableView reloadData];
+    if (self.changeSortTypeControl.selectedSegmentIndex == SortTableTypeDate)
+    {
+        self.sectionsArray = [self createDataForTableToMonthWith:self.studentsArray withFilter:self.searchBar.text];
+        [self.tableView reloadData];
+    }
+    else if (self.changeSortTypeControl.selectedSegmentIndex == SortTableTypeName)
+    {
+        self.sectionsArray = [self createDataForTableToNamehWith:self.studentsArray withFilter:self.searchBar.text];
+        [self.tableView reloadData];
+    }
+    else if (self.changeSortTypeControl.selectedSegmentIndex == SortTableTypeLastName)
+    {
+        self.sectionsArray = [self createDataForTableToLastNamehWith:self.studentsArray withFilter:self.searchBar.text];
+        [self.tableView reloadData];
+    }
 }
 
+#pragma mark - Actions
+
+- (IBAction)actionChangeSortType:(UISegmentedControl *)sender
+{
+    if (sender.selectedSegmentIndex == SortTableTypeDate)
+    {
+        self.sectionsArray = [self createDataForTableToMonthWith:self.studentsArray withFilter:self.searchBar.text];
+        [self.tableView reloadData];
+    }
+    else if (sender.selectedSegmentIndex == SortTableTypeName)
+    {
+        self.sectionsArray = [self createDataForTableToNamehWith:self.studentsArray withFilter:self.searchBar.text];
+        [self.tableView reloadData];
+    }
+    else if (sender.selectedSegmentIndex == SortTableTypeLastName)
+    {
+        self.sectionsArray = [self createDataForTableToLastNamehWith:self.studentsArray withFilter:self.searchBar.text];
+        [self.tableView reloadData];
+    }
+}
 @end
 
 

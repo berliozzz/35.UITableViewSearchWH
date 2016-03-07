@@ -10,8 +10,10 @@
 
 @interface ViewController : UITableViewController <UISearchBarDelegate>
 
-
 @property (strong, nonatomic) IBOutlet UISearchBar *searchBar;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *changeSortTypeControl;
+
+- (IBAction)actionChangeSortType:(UISegmentedControl *)sender;
 
 @end
 
